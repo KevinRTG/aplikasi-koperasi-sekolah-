@@ -232,7 +232,7 @@ if (($s == "baru") OR ($s == "edit"))
 	$e_telp = balikin($rowx['telp']);
 
 	
-	echo '<a href="'.$filenya.'" class="btn btn-danger"><< DAFTAR PELANGGAN</a>
+	echo '<a href="'.$filenya.'" class="btn btn-danger"> DAFTAR PELANGGAN</a>
 	<hr>
 	
 	<form action="'.$filenya.'" method="post" name="formx2">';

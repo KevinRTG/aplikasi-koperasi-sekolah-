@@ -248,12 +248,12 @@ if (($s == "baru") OR ($s == "edit"))
 
 	
 	<?php
-	echo '<a href="'.$filenya.'" class="btn btn-danger"><< DAFTAR PRODUK LAINNYA</a>
+	echo '<a href="'.$filenya.'" class="btn btn-danger"> DAFTAR PRODUK LAINNYA</a>
 	<hr>
 	
 	<form action="'.$filenya.'" method="post" name="formx2">
 
-	<div class="row">
+	<div class="grid">
 
 		<div class="col-md-3">
 			
@@ -313,8 +313,8 @@ if (($s == "baru") OR ($s == "edit"))
 	<input name="kd" type="hidden" value="'.$kdx.'">
 	<input name="page" type="hidden" value="'.$page.'">
 	
-	<input name="btnSMP" type="submit" value="SIMPAN" class="btn btn-block btn-danger">
-	<input name="btnBTL" type="submit" value="BATAL" class="btn btn-block btn-info">
+	<input name="btnSMP" type="submit" value="SIMPAN" class="btn btn-m btn-danger">
+	<input name="btnBTL" type="submit" value="BATAL" class="btn btn-m btn-info">
 	</p>
 	
 	

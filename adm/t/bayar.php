@@ -445,7 +445,7 @@ if (!empty($nis))
 	<input name="btnSMP" type="submit" value="SIMPAN dan CETAK >>" class="btn btn-block btn-danger">
 	<br>
 	
-	<a href="'.$filenya.'" class="btn btn-block btn-info"><< ENTRI ANGGOTA LAIN</a>
+	<a href="'.$filenya.'" class="btn btn-block btn-info"> ENTRI ANGGOTA LAIN</a>
 	</p>';
 	
 	
