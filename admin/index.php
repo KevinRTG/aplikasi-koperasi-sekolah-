@@ -18,7 +18,7 @@ $filenya = "index.php";
 $filenya_ke = $sumber;
 $judul = "Login Admin";
 $judulku = $judul;
-$pesan = "Password Salah. Silahkan Ulangi Lagi...!!";
+$pesan = "Username atau Password Salah. Silahkan Ulangi Lagi...!!";
 
 
 

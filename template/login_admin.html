@@ -19,32 +19,138 @@
   <script src="{sumber}/template/adminlte/bower_components/jquery/dist/jquery.min.js"></script>
   <!-- Bootstrap 3.3.7 -->
   <script src="{sumber}/template/adminlte/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
- 
 
+  <!-- Custom CSS untuk perbaikan layout -->
+  <style>
+    /* Reset margin dan padding */
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+    }
+
+    /* Perbaikan untuk body login */
+    body.login-page {
+      background-image: url('{sumber}/template/img/ShinyOverlay.svg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px 0;
+      box-sizing: border-box;
+    }
+
+    /* Perbaikan login-box */
+    .login-box {
+      width: 100%;
+      max-width: 400px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    /* Perbaikan login-logo */
+    .login-logo {
+      text-align: center;
+      margin-bottom: 25px;
+      font-size: 35px;
+      font-weight: 300;
+    }
+
+    .login-logo b {
+      font-weight: 600;
+      color: #333;
+    }
+
+    .login-logo p {
+      margin: 10px 0 0 0;
+      font-size: 16px;
+      color: #666;
+      font-weight: bold; /* Menambahkan font-weight bold untuk menebalkan teks */
+    }
+
+    /* Perbaikan login-box-body */
+    .login-box-body {
+      background: #fff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      border: 1px solid #e0e0e0;
+    }
+
+    /* Hapus table layout dan ganti dengan div */
+    .login-form-container {
+      width: 100%;
+    }
+
+    /* Responsive design */
+    @media (max-width: 768px) {
+      .login-box {
+        max-width: 90%;
+        margin: 0 auto;
+      }
+      
+      .login-box-body {
+        padding: 20px;
+      }
+      
+      body.login-page {
+        padding: 10px;
+      }
+    }
+
+    @media (max-height: 600px) {
+      body.login-page {
+        align-items: flex-start;
+        padding-top: 20px;
+      }
+    }
+
+    /* Pastikan tidak ada overflow vertikal yang tidak diinginkan */
+    .login-box * {
+      box-sizing: border-box;
+    }
+
+    /* Perbaikan untuk form elements jika ada */
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-control {
+      height: 45px;
+      border-radius: 4px;
+      border: 1px solid #ddd;
+      padding: 10px 15px;
+      font-size: 14px;
+    }
+
+    .btn {
+      height: 45px;
+      border-radius: 4px;
+      font-size: 16px;
+      font-weight: 500;
+    }
+  </style>
 </head>
 
-<body class="hold-transition login-page" style="background-image: url('{sumber}/template/img/ShinyOverlay.svg'); background-size: cover; background-position: center;">
+<body class="hold-transition login-page">
   <div class="login-box">
     <div class="login-logo">
       <b>LOGIN</b>
-      <p class="text-center" style="font-size: medium;">Silakan Masuk</p>
+      <p class="text-center">Silakan Masuk</p>
     </div>
 
     <div class="login-box-body">
-      <table width="600" border="0" cellpadding="5" cellspacing="5">
-        <tr valign="top">
-          <td valign="top" width="319">
-            {isi}
-          </td>
-          <td width="20"></td>
-          <td></td>
-        </tr>
-      </table>
+      <div class="login-form-container">
+        {isi}
+      </div>
     </div>
     <!-- /.login-box-body -->
   </div>
   <!-- /.login-box -->
-
-  
 </body>
 </html>
