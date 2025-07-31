@@ -9,7 +9,7 @@ require("inc/koneksi.php");
 
 
 
-nocache;
+nocache();
 
 
 
