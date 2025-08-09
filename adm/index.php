@@ -9,7 +9,7 @@ require "../inc/cek/adm.php";
 require "../inc/class/paging.php";
 $tpl = LoadTpl("../template/adm.html");
 
-// nocache; // Remove or comment out undefined constant
+nocache(); 
 
 //nilai
 $filenya = "index.php";

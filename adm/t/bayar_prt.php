@@ -9,7 +9,7 @@ require("../../inc/cek/adm.php");
 $tpl = LoadTpl("../../template/window.html");
 
 
-nocache;
+nocache();
 
 //nilai
 $filenya = "bayar_prt.php";

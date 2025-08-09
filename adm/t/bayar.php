@@ -10,7 +10,7 @@ require("../../inc/cek/adm.php");
 $tpl = LoadTpl("../../template/adm.html");
 
 
-nocache;
+nocache();
 
 //nilai
 $filenya = "bayar.php";
@@ -398,7 +398,7 @@ echo '<form name="formx" method="post" action="'.$filenya.'">
 KODE Anggota :
 <br>
 <input type="text" name="swnis" id="swnis" value="'.$nis.'" size="10" class="btn btn-warning" required>
-<input name="btnOK" type="submit" value=">>" class="btn btn-danger">
+<input name="btnOK" type="submit" value="ENTER" class="btn btn-danger">
 </p>';
 
 if (!empty($nis))
@@ -442,7 +442,7 @@ if (!empty($nis))
 	
 	<p>
 	<input name="swkd" type="hidden" value="'.$cc_kd.'">
-	<input name="btnSMP" type="submit" value="SIMPAN dan CETAK >>" class="btn btn-block btn-danger">
+	<input name="btnSMP" type="submit" value="SIMPAN dan CETAK" class="btn btn-block btn-danger">
 	<br>
 	
 	<a href="'.$filenya.'" class="btn btn-block btn-info"> ENTRI ANGGOTA LAIN</a>

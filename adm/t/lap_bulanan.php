@@ -9,7 +9,7 @@ require("../../inc/cek/adm.php");
 $tpl = LoadTpl("../../template/adm.html");
 
 
-nocache;
+nocache();
 
 //nilai
 $filenya = "lap_bulanan.php";

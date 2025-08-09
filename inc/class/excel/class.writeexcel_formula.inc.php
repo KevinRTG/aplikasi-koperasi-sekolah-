@@ -1044,42 +1044,33 @@ function _cellToRowcol($cell)
 * @access private
 */
 function _advance()
- {
+{
     $i = $this->_current_char;
     // eat up white spaces
-    if ($i < strlen($this->_formula))
- {
-        while ($this->_formula{$i} == " ") {
+    $token = ""; // Inisialisasi token
+    if ($i < strlen($this->_formula)) {
+        while ($i < strlen($this->_formula) && $this->_formula[$i] == " ") {
             $i++;
         }
         if ($i < strlen($this->_formula) - 1) {
-            $this->_lookahead = $this->_formula{$i+1};
+            $this->_lookahead = $this->_formula[$i+1];
         }
-        $token = "";
     }
-    while ($i < strlen($this->_formula))
- {
-        $token .= $this->_formula{$i};
+    while ($i < strlen($this->_formula)) {
+        $token .= $this->_formula[$i];
         if ($i < strlen($this->_formula) - 1) {
-            $this->_lookahead = $this->_formula{$i+1};
-        }
- else {
+            $this->_lookahead = $this->_formula[$i+1];
+        } else {
             $this->_lookahead = '';
         }
-        if ($this->_match($token) != '')
- {
-            //if ($i < strlen($this->_formula) - 1) {
-            //    $this->_lookahead = $this->_formula{$i+1};
-            //}
+        if ($this->_match($token) != '') {
             $this->_current_char = $i + 1;
             $this->_current_token = $token;
             return 1;
         }
         if ($i < strlen($this->_formula) - 2) {
-            $this->_lookahead = $this->_formula{$i+2};
-        }
- else {
-        // if we run out of characters _lookahead becomes empty
+            $this->_lookahead = $this->_formula[$i+2];
+        } else {
             $this->_lookahead = '';
         }
         $i++;
@@ -1149,58 +1140,50 @@ function _match($token)
             break;
         default:
             // if it's a reference
-            if (preg_match('/^\$?[A-Ia-i]?[A-Za-z]\$?[0-9]+$/',$token) and
-               !ereg("[0-9]",$this->_lookahead) and 
-               ($this->_lookahead != ':') and ($this->_lookahead != '.') and
-               ($this->_lookahead != '!'))
- {
+            if (preg_match('/^\$?[A-Ia-i]?[A-Za-z]\$?[0-9]+$/',$token) &&
+               !preg_match("/[0-9]/",$this->_lookahead) &&
+               ($this->_lookahead != ':') && ($this->_lookahead != '.') &&
+               ($this->_lookahead != '!')) {
                 return $token;
             }
             // If it's an external reference (Sheet1!A1 or Sheet1:Sheet2!A1)
-            elseif (preg_match("/^[A-Za-z0-9_]+(\:[A-Za-z0-9_]+)?\![A-Ia-i]?[A-Za-z][0-9]+$/",$token) and
-                   !ereg("[0-9]",$this->_lookahead) and
-                   ($this->_lookahead != ':') and ($this->_lookahead != '.'))
- {
+            elseif (preg_match("/^[A-Za-z0-9_]+(\:[A-Za-z0-9_]+)?\![A-Ia-i]?[A-Za-z][0-9]+$/",$token) &&
+                   !preg_match("/[0-9]/",$this->_lookahead) &&
+                   ($this->_lookahead != ':') && ($this->_lookahead != '.')) {
                 return $token;
             }
             // if it's a range (A1:A2)
-            elseif (preg_match("/^(\$)?[A-Ia-i]?[A-Za-z](\$)?[0-9]+:(\$)?[A-Ia-i]?[A-Za-z](\$)?[0-9]+$/",$token) and 
-                   !ereg("[0-9]",$this->_lookahead))
- {
+            elseif (preg_match("/^(\$)?[A-Ia-i]?[A-Za-z](\$)?[0-9]+:(\$)?[A-Ia-i]?[A-Za-z](\$)?[0-9]+$/",$token) &&
+                   !preg_match("/[0-9]/",$this->_lookahead)) {
                 return $token;
             }
             // if it's a range (A1..A2)
-            elseif (preg_match("/^(\$)?[A-Ia-i]?[A-Za-z](\$)?[0-9]+\.\.(\$)?[A-Ia-i]?[A-Za-z](\$)?[0-9]+$/",$token) and 
-                   !ereg("[0-9]",$this->_lookahead))
- {
+            elseif (preg_match("/^(\$)?[A-Ia-i]?[A-Za-z](\$)?[0-9]+\.\.(\$)?[A-Ia-i]?[A-Za-z](\$)?[0-9]+$/",$token) &&
+                   !preg_match("/[0-9]/",$this->_lookahead)) {
                 return $token;
             }
             // If it's an external range like Sheet1:Sheet2!A1:B2
-            elseif (preg_match("/^[A-Za-z0-9_]+(\:[A-Za-z0-9_]+)?\!([A-Ia-i]?[A-Za-z])?[0-9]+:([A-Ia-i]?[A-Za-z])?[0-9]+$/",$token) and
-                   !ereg("[0-9]",$this->_lookahead))
- {
+            elseif (preg_match("/^[A-Za-z0-9_]+(\:[A-Za-z0-9_]+)?\!([A-Ia-i]?[A-Za-z])?[0-9]+:([A-Ia-i]?[A-Za-z])?[0-9]+$/",$token) &&
+                   !preg_match("/[0-9]/",$this->_lookahead)) {
                 return $token;
             }
-	    // If it's an external range like 'Sheet1:Sheet2'!A1:B2
-            elseif (preg_match("/^'[A-Za-z0-9_ ]+(\:[A-Za-z0-9_ ]+)?'\!([A-Ia-i]?[A-Za-z])?[0-9]+:([A-Ia-i]?[A-Za-z])?[0-9]+$/",$token) and
-                   !ereg("[0-9]",$this->_lookahead))
- {
+            // If it's an external range like 'Sheet1:Sheet2'!A1:B2
+            elseif (preg_match("/^'[A-Za-z0-9_ ]+(\:[A-Za-z0-9_ ]+)?'\!([A-Ia-i]?[A-Za-z])?[0-9]+:([A-Ia-i]?[A-Za-z])?[0-9]+$/",$token) &&
+                   !preg_match("/[0-9]/",$this->_lookahead)) {
                 return $token;
             }
             // If it's a number (check that it's not a sheet name or range)
-            elseif (is_numeric($token) and 
-                    (!is_numeric($token.$this->_lookahead) or ($this->_lookahead == '')) and
-                    ($this->_lookahead != '!') and ($this->_lookahead != ':'))
- {
+            elseif (is_numeric($token) &&
+                    (!is_numeric($token.$this->_lookahead) || ($this->_lookahead == '')) &&
+                    ($this->_lookahead != '!') && ($this->_lookahead != ':')) {
                 return $token;
             }
             // If it's a string (of maximum 255 characters)
-            elseif (ereg("^\"[^\"]{0,255}\"$",$token))
- {
+            elseif (preg_match('/^"[^"]{0,255}"$/',$token)) {
                 return $token;
             }
             // if it's a function call
-            elseif (eregi("^[A-Z0-9\xc0-\xdc\.]+$",$token) and ($this->_lookahead == "(")) {
+            elseif (preg_match("/^[A-Z0-9\xc0-\xdc\.]+$/i",$token) && ($this->_lookahead == "(")) {
                 return $token;
             }
             return '';
@@ -1303,10 +1286,9 @@ function _condition()
 * @return mixed The parsed ptg'd tree
 */
 function _expression()
- {
+{
     // If it's a string return a string node
-    if (ereg("^\"[^\"]{0,255}\"$", $this->_current_token))
- {
+    if (preg_match('/^"[^"]{0,255}"$/', $this->_current_token)) {
         $result = $this->_createTree($this->_current_token, '', '');
         $this->_advance();
         return $result;
@@ -1315,21 +1297,16 @@ function _expression()
     if ($this->isError($result)) {
         return $result;
     }
-    while (($this->_current_token == SPREADSHEET_EXCEL_WRITER_ADD) or 
-           ($this->_current_token == SPREADSHEET_EXCEL_WRITER_SUB))
- {
-        if ($this->_current_token == SPREADSHEET_EXCEL_WRITER_ADD)
- 
-{
+    while (($this->_current_token == SPREADSHEET_EXCEL_WRITER_ADD) ||
+           ($this->_current_token == SPREADSHEET_EXCEL_WRITER_SUB)) {
+        if ($this->_current_token == SPREADSHEET_EXCEL_WRITER_ADD) {
             $this->_advance();
             $result2 = $this->_term();
             if ($this->isError($result2)) {
                 return $result2;
             }
             $result = $this->_createTree('ptgAdd', $result, $result2);
-        }
- else 
-{
+        } else {
             $this->_advance();
             $result2 = $this->_term();
             if ($this->isError($result2)) {
@@ -1405,9 +1382,8 @@ function _term()
 * @return mixed The parsed ptg'd tree
 */
 function _fact()
- {
-    if ($this->_current_token == SPREADSHEET_EXCEL_WRITER_OPEN)
- {
+{
+    if ($this->_current_token == SPREADSHEET_EXCEL_WRITER_OPEN) {
         $this->_advance();         // eat the "("
         $result = $this->_parenthesizedExpression();
         if ($this->_current_token != SPREADSHEET_EXCEL_WRITER_CLOSE) {
@@ -1416,51 +1392,44 @@ function _fact()
         $this->_advance();         // eat the ")"
         return $result;
     }
- if (preg_match('/^\$?[A-Ia-i]?[A-Za-z]\$?[0-9]+$/',$this->_current_token))
- {
-    // if it's a reference
+    if (preg_match('/^\$?[A-Ia-i]?[A-Za-z]\$?[0-9]+$/',$this->_current_token)) {
+        // if it's a reference
         $result = $this->_createTree($this->_current_token, '', '');
         $this->_advance();
         return $result;
     }
- elseif (preg_match("/^[A-Za-z0-9_]+(\:[A-Za-z0-9_]+)?\![A-Ia-i]?[A-Za-z][0-9]+$/",$this->_current_token))
- {
-    // If it's an external reference (Sheet1!A1 or Sheet1:Sheet2!A1)
+    elseif (preg_match("/^[A-Za-z0-9_]+(\:[A-Za-z0-9_]+)?\![A-Ia-i]?[A-Za-z][0-9]+$/",$this->_current_token)) {
+        // If it's an external reference (Sheet1!A1 or Sheet1:Sheet2!A1)
         $result = $this->_createTree($this->_current_token, '', '');
         $this->_advance();
         return $result;
     }
- elseif (preg_match("/^(\$)?[A-Ia-i]?[A-Za-z](\$)?[0-9]+:(\$)?[A-Ia-i]?[A-Za-z](\$)?[0-9]+$/",$this->_current_token) or 
-              preg_match("/^(\$)?[A-Ia-i]?[A-Za-z](\$)?[0-9]+\.\.(\$)?[A-Ia-i]?[A-Za-z](\$)?[0-9]+$/",$this->_current_token))
- {
-    // if it's a range
+    elseif (preg_match("/^(\$)?[A-Ia-i]?[A-Za-z](\$)?[0-9]+:(\$)?[A-Ia-i]?[A-Za-z](\$)?[0-9]+$/",$this->_current_token) ||
+            preg_match("/^(\$)?[A-Ia-i]?[A-Za-z](\$)?[0-9]+\.\.(\$)?[A-Ia-i]?[A-Za-z](\$)?[0-9]+$/",$this->_current_token)) {
+        // if it's a range
         $result = $this->_current_token;
         $this->_advance();
         return $result;
     }
- elseif (preg_match("/^[A-Za-z0-9_]+(\:[A-Za-z0-9_]+)?\!([A-Ia-i]?[A-Za-z])?[0-9]+:([A-Ia-i]?[A-Za-z])?[0-9]+$/",$this->_current_token))
- {
-    // If it's an external range (Sheet1!A1:B2)
+    elseif (preg_match("/^[A-Za-z0-9_]+(\:[A-Za-z0-9_]+)?\!([A-Ia-i]?[A-Za-z])?[0-9]+:([A-Ia-i]?[A-Za-z])?[0-9]+$/",$this->_current_token)) {
+        // If it's an external range (Sheet1!A1:B2)
         $result = $this->_current_token;
         $this->_advance();
         return $result;
     }
- elseif (preg_match("/^'[A-Za-z0-9_ ]+(\:[A-Za-z0-9_ ]+)?'\!([A-Ia-i]?[A-Za-z])?[0-9]+:([A-Ia-i]?[A-Za-z])?[0-9]+$/",$this->_current_token))
- {
-    // If it's an external range ('Sheet1'!A1:B2)
+    elseif (preg_match("/^'[A-Za-z0-9_ ]+(\:[A-Za-z0-9_ ]+)?'\!([A-Ia-i]?[A-Za-z])?[0-9]+:([A-Ia-i]?[A-Za-z])?[0-9]+$/",$this->_current_token)) {
+        // If it's an external range ('Sheet1'!A1:B2)
         $result = $this->_current_token;
         $this->_advance();
         return $result;
     }
- elseif (is_numeric($this->_current_token))
- {
+    elseif (is_numeric($this->_current_token)) {
         $result = $this->_createTree($this->_current_token, '', '');
         $this->_advance();
         return $result;
     }
- elseif (eregi("^[A-Z0-9\xc0-\xdc\.]+$",$this->_current_token))
- {
-    // if it's a function call
+    elseif (preg_match("/^[A-Z0-9\xc0-\xdc\.]+$/i",$this->_current_token)) {
+        // if it's a function call
         $result = $this->_func();
         return $result;
     }
@@ -1480,12 +1449,13 @@ function _func()
     $function = $this->_current_token;
     $this->_advance();
     $this->_advance();         // eat the "("
+    $result = null; // Initialize $result to avoid undefined variable error
     while ($this->_current_token != ')')
  {
         if ($num_args > 0)
  {
             if ($this->_current_token == SPREADSHEET_EXCEL_WRITER_COMA ||
-		$this->_current_token == SPREADSHEET_EXCEL_WRITER_SCOLON) {
+        $this->_current_token == SPREADSHEET_EXCEL_WRITER_SCOLON) {
                 $this->_advance();  // eat the ","
             }
  else {
