@@ -10,7 +10,7 @@ require("../inc/class/paging.php");
 $tpl = LoadTpl("../template/adm.html");
 
 
-nocache;
+nocache();
 
 //nilai
 $filenya = "index.php";
