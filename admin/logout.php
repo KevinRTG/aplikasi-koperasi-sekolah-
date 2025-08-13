@@ -10,7 +10,7 @@ require("../inc/koneksi.php");
 
 
 
-nocache;
+nocache();
 
 
 
@@ -23,4 +23,3 @@ session_destroy();
 //re-direct
 xloc($sumber);
 exit();
-?>

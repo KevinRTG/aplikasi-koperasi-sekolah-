@@ -10,13 +10,13 @@ require("../../inc/class/paging.php");
 
 
 
-nocache;
+nocache();
 
 
 
 //nilai
-$filenya = "pinjam_pdf.php"; 
-$judulku = $judul; 
+$filenya = "pinjam_pdf.php";
+$judulku = $judul;
 $bookkd = nosql($_REQUEST['kd']);
 $kd = nosql($_REQUEST['kd']);
 $judul = "NOTA";
@@ -30,6 +30,7 @@ $judul = "NOTA";
 require_once("../../inc/class/dompdf/autoload.inc.php");
 
 use Dompdf\Dompdf;
+
 $dompdf = new Dompdf();
 
 
@@ -46,22 +47,22 @@ ob_start();
 ?>
 
 
-  
-  <script>
-  	$(document).ready(function() {
-    $('#table-responsive').dataTable( {
-        "scrollX": true
-    } );
-} );
-  </script>
-  
+
+<script>
+	$(document).ready(function() {
+		$('#table-responsive').dataTable({
+			"scrollX": true
+		});
+	});
+</script>
+
 
 
 
 <?php
 //detail
-$qx = mysqli_query($koneksi, "SELECT * FROM pelanggan_pinjam ".
-									"WHERE kd = '$bookkd'");
+$qx = mysqli_query($koneksi, "SELECT * FROM pelanggan_pinjam " .
+	"WHERE kd = '$bookkd'");
 $rowx = mysqli_fetch_assoc($qx);
 $i_postdate = balikin($rowx['postdate']);
 $i_tgl_pinjam = balikin($rowx['tgl_pinjam']);
@@ -75,10 +76,9 @@ $i_p_jabatan = balikin($rowx['pelanggan_jabatan']);
 
 
 //jika ada
-if (!empty($i_p_kd))
-	{
+if (!empty($i_p_kd)) {
 	$i_p_ket = "$i_p_nama KODE.$i_p_kode";
-	}
+}
 
 
 $i_p_telp = balikin($rowx['pelanggan_telp']);
@@ -87,7 +87,7 @@ $i_subtotal = balikin($rowx['subtotal']);
 $i_angsuran_total = balikin($rowx['kredit_angsuran_total']);
 $i_angsuran_nominal = balikin($rowx['kredit_angsuran_nominal']);
 
-$i_selisih = $i_subtotal; 
+$i_selisih = $i_subtotal;
 
 
 
@@ -103,9 +103,9 @@ echo '<p>
 <tr>
 <td align="center">
 
-<b>'.$sek_nama.'</b>
+<b>' . $sek_nama . '</b>
 <br>
-TELP : '.$sek_telp.'
+TELP : ' . $sek_telp . '
 <hr>
 
 </td>
@@ -119,15 +119,15 @@ TELP : '.$sek_telp.'
 <thead>
 <tr valign="top">
 <td align="left">
-'.$i_tgl_pinjam.'
+' . $i_tgl_pinjam . '
 <br>
-'.$i_p_nama.'
+' . $i_p_nama . '
 <br>
-'.$i_p_jabatan.'
+' . $i_p_jabatan . '
 </td>
 
 <td align="right">
-TELP.'.$i_p_telp.'
+TELP.' . $i_p_telp . '
 </td>
 </tr>
 </thead>
@@ -145,7 +145,7 @@ No. Transaksi
 </td>
 
 <td align="right">
-'.$i_transaksi.' 
+' . $i_transaksi . ' 
 </td>
 </tr>
 
@@ -199,7 +199,7 @@ Total Nilai
 </td>
 
 <td align="right">
-'.xduit3($i_subtotal).' 
+' . xduit3($i_subtotal) . ' 
 </td>
 </tr>
 
@@ -225,37 +225,33 @@ Total Nilai
 echo '<table class="table" border="0" cellspacing="0" cellpadding="5" width="300">
 <thead>';
 
-for ($k=1;$k<=$i_angsuran_total;$k++)
-	{
+for ($k = 1; $k <= $i_angsuran_total; $k++) {
 	//nilai
-	$qku = mysqli_query($koneksi, "SELECT * FROM pelanggan_pinjam_kredit ".
-										"WHERE pinjam_kd = '$kd' ".
-										"AND nourut = '$k'");
+	$qku = mysqli_query($koneksi, "SELECT * FROM pelanggan_pinjam_kredit " .
+		"WHERE pinjam_kd = '$kd' " .
+		"AND nourut = '$k'");
 	$rku = mysqli_fetch_assoc($qku);
 	$tku = mysqli_num_rows($qku);
 	$ku_nominal = balikin($rku['nominal']);
-	
+
 	//jika ada
-	if (!empty($ku_nominal))
-		{
+	if (!empty($ku_nominal)) {
 		$ku_nominal2 = xduit3($ku_nominal);
-		}
-	else
-		{
+	} else {
 		$ku_nominal2 = "-";
-		}
-		
+	}
+
 	echo '<tr valign="top">
 	<td align="left">
-	Pembayaran #'.$k.'  
+	Pembayaran #' . $k . '  
 	</td>
 	
 	
 	<td align="right">
-	'.$ku_nominal2.' 
+	' . $ku_nominal2 . ' 
 	</td>
 	</tr>';
-	}
+}
 
 
 echo '</thead>
@@ -265,8 +261,8 @@ echo '</thead>
 
 
 //ketahui yg udah bayar
-$qku = mysqli_query($koneksi, "SELECT * FROM pelanggan_pinjam_kredit ".
-									"WHERE pinjam_kd = '$kd'");
+$qku = mysqli_query($koneksi, "SELECT * FROM pelanggan_pinjam_kredit " .
+	"WHERE pinjam_kd = '$kd'");
 $rku = mysqli_fetch_assoc($qku);
 $tku = mysqli_num_rows($qku);
 
@@ -288,7 +284,7 @@ Sisa Pembayaran
 </td>
 
 <td align="right">
-'.xduit3($nil_kurang).' 
+' . xduit3($nil_kurang) . ' 
 </td>
 </tr>
 
@@ -307,7 +303,7 @@ Sisa Pembayaran
 </table>';
 
 
-	
+
 
 
 
@@ -315,7 +311,7 @@ echo '<table class="table" border="0" cellspacing="0" cellpadding="5" width="300
 <thead>
 <tr valign="top">
 <td align="left">
-Postdate Cetak : '.$today.'
+Postdate Cetak : ' . $today . '
 <hr> 
 </td>
 </tr>
@@ -393,7 +389,7 @@ ob_end_clean();
 
 // Melakukan output file Pdf
 //$dompdf->stream('raport-$nis-$ku_nama2.pdf');
-$dompdf->stream('nota-'.$i_transaksi.'.pdf');
+$dompdf->stream('nota-' . $i_transaksi . '.pdf');
 
 
 

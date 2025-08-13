@@ -8,7 +8,7 @@ require("../../inc/koneksi.php");
 require("../../inc/cek/adm.php");
 $tpl = LoadTpl("../../template/adm.html");
 
-nocache;
+nocache();
 
 //nilai
 $filenya = "pass.php";
@@ -20,12 +20,12 @@ $juduli = $judul;
 
 //PROSES ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //kasi log entri ///////////////////////////////////////////////////////////////////////////////////
-$ku_ket = cegah("[MENU : $judul].");			
+$ku_ket = cegah("[MENU : $judul].");
 
 
 //insert
-mysqli_query($koneksi, "INSERT INTO user_log_entri(kd, ket, postdate) VALUES ".
-				"('$x', '$ku_ket', '$today')");
+mysqli_query($koneksi, "INSERT INTO user_log_entri(kd, ket, postdate) VALUES " .
+	"('$x', '$ku_ket', '$today')");
 //kasi log login ///////////////////////////////////////////////////////////////////////////////////
 
 
@@ -33,8 +33,7 @@ mysqli_query($koneksi, "INSERT INTO user_log_entri(kd, ket, postdate) VALUES ".
 
 
 //simpan
-if ($_POST['btnSMP'])
-	{
+if ($_POST['btnSMP']) {
 	//ambil nilai
 	$passlama = md5(cegah($_POST["passlama"]));
 	$passbaru = md5(cegah($_POST["passbaru"]));
@@ -42,39 +41,34 @@ if ($_POST['btnSMP'])
 
 	//cek
 	//nek null
-	if ((empty($passlama)) OR (empty($passbaru)) OR (empty($passbaru2)))
-		{
+	if ((empty($passlama)) or (empty($passbaru)) or (empty($passbaru2))) {
 		//re-direct
 		$pesan = "Input Tidak Lengkap. Harap Diulangi...!!";
-		pekem($pesan,$filenya);
+		pekem($pesan, $filenya);
 		exit();
-		}
+	}
 
 	//nek pass baru gak sama
-	else if ($passbaru != $passbaru2)
-		{
+	else if ($passbaru != $passbaru2) {
 		//re-direct
 		$pesan = "Password Baru Tidak Sama. Harap Diulangi...!!";
-		pekem($pesan,$filenya);
+		pekem($pesan, $filenya);
 		exit();
-		}
-	else
-		{
+	} else {
 		//query
-		$q = mysqli_query($koneksi, "SELECT * FROM adminx ".
-							"WHERE kd = '$kd071_session' ".
-							"AND usernamex = '$username071_session' ".
-							"AND passwordx = '$passlama'");
+		$q = mysqli_query($koneksi, "SELECT * FROM adminx " .
+			"WHERE kd = '$kd071_session' " .
+			"AND usernamex = '$username071_session' " .
+			"AND passwordx = '$passlama'");
 		$row = mysqli_fetch_assoc($q);
 		$total = mysqli_num_rows($q);
 
 		//cek
-		if ($total != 0)
-			{
+		if ($total != 0) {
 			//perintah SQL
-			mysqli_query($koneksi, "UPDATE adminx SET passwordx = '$passbaru' ".
-							"WHERE kd = '$kd071_session' ".
-							"AND usernamex = '$username071_session'");
+			mysqli_query($koneksi, "UPDATE adminx SET passwordx = '$passbaru' " .
+				"WHERE kd = '$kd071_session' " .
+				"AND usernamex = '$username071_session'");
 
 			//diskonek
 			xfree($q);
@@ -86,9 +80,7 @@ if ($_POST['btnSMP'])
 			$ke = "../index.php";
 			pekem($pesan, $ke);
 			exit();
-			}
-		else
-			{
+		} else {
 			//diskonek
 			xfree($q);
 			xfree($qbw);
@@ -98,9 +90,9 @@ if ($_POST['btnSMP'])
 			$pesan = "PASSWORD LAMA TIDAK COCOK. HARAP DIULANGI...!!!";
 			pekem($pesan, $filenya);
 			exit();
-			}
 		}
 	}
+}
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -116,7 +108,7 @@ ob_start();
 
 
 //view //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-echo '<form action="'.$filenya.'" method="post" name="formx">
+echo '<form action="' . $filenya . '" method="post" name="formx">
 <p>Password Lama : <br>
 <input name="passlama" type="password" size="15" class="btn btn-warning" required>
 </p>
@@ -150,4 +142,3 @@ require("../../inc/niltpl.php");
 xfree($qbw);
 xclose($koneksi);
 exit();
-?>

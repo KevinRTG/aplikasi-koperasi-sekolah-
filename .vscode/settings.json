@@ -1,3 +1,7 @@
 {
     "CodeGPT.apiKey": "Gemini CLI"
+    "php-cs-fixer.executablePath": "/path/to/php-cs-fixer",
+    "php-cs-fixer.rules": "@PSR12",
+    "php-cs-fixer.autoFix": true,
+    "php-cs-fixer.formatOnSave": true
 }

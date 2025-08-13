@@ -5,11 +5,10 @@ session_start();
 require("inc/config.php");
 require("inc/fungsi.php");
 
-nocache;
+nocache();
 
 
 //re-direct
 $pesan = "Waktu Sesi Login Telah Habis. Silahkan Login Kembali...!!";
-pekem($pesan,$sumber);
+pekem($pesan, $sumber);
 exit();
-?>
