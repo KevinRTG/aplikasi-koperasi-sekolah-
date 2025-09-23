@@ -83,8 +83,11 @@ if ($_POST['btnSMP']) {
 	$page = nosql($_POST['page']);
 	$e_kode = cegah($_POST['e_kode']);
 	$e_nama = cegah($_POST['e_nama']);
+	$e_email = cegah($_POST['e_email']);
 	$e_jabatan = cegah($_POST['e_jabatan']);
 	$e_telp = cegah($_POST['e_telp']);
+	$e_alamat = cegah($_POST['e_alamat']);
+	$e_jeniskelamin = cegah($_POST['e_jeniskelamin']);
 
 
 
@@ -108,8 +111,11 @@ if ($_POST['btnSMP']) {
 		if ($s == "edit") {
 			mysqli_query($koneksi, "UPDATE m_pelanggan SET kode = '$e_kode', " .
 				"nama = '$e_nama', " .
+				"email = '$e_email', " .
 				"jabatan = '$e_jabatan', " .
 				"telp = '$e_telp', " .
+				"alamat = '$e_alamat', " .
+				"jeniskelamin = '$e_jeniskelamin', " .
 				"postdate = '$today' " .
 				"WHERE kd = '$kd'");
 
@@ -136,10 +142,10 @@ if ($_POST['btnSMP']) {
 				pekem($pesan, $ke);
 				exit();
 			} else {
-				mysqli_query($koneksi, "INSERT INTO m_pelanggan(kd, kode, nama, " .
-					"jabatan, telp, postdate) VALUES " .
-					"('$kd', '$e_kode', '$e_nama', " .
-					"'$e_jabatan', '$e_telp', '$today')");
+				mysqli_query($koneksi, "INSERT INTO m_pelanggan(kd, kode, nama, email, " .
+					"jabatan, telp, alamat, jeniskelamin, postdate) VALUES " .
+					"('$kd', '$e_kode', '$e_nama', '$e_email', " .
+					"'$e_jabatan', '$e_telp', '$e_alamat', '$e_jeniskelamin', '$today')");
 
 
 
@@ -212,11 +218,14 @@ if (($s == "baru") or ($s == "edit")) {
 	$rowx = mysqli_fetch_assoc($qx);
 	$e_kode = balikin($rowx['kode']);
 	$e_nama = balikin($rowx['nama']);
+	$e_email = balikin($rowx['email']);
 	$e_jabatan = balikin($rowx['jabatan']);
 	$e_telp = balikin($rowx['telp']);
+	$e_alamat = balikin($rowx['alamat']);
+	$e_jeniskelamin = balikin($rowx['jeniskelamin']);
 
 
-	echo '<a href="' . $filenya . '" class="btn btn-danger"> DAFTAR PELANGGAN</a>
+	echo '<a href="' . $filenya . '" class="btn btn-danger"> KEMBALI</a>
 	<hr>
 	
 	<form action="' . $filenya . '" method="post" name="formx2">';
@@ -243,7 +252,15 @@ if (($s == "baru") or ($s == "edit")) {
 		<br>
 		<input name="e_nama" type="text" value="' . $e_nama . '" size="30" class="btn-warning" required>
 		</p>
+
 	
+		<p>
+		Email : 
+		<br>
+		<input name="e_email" type="email" value="' . $e_email . '" size="30" class="btn-warning">
+		</p>
+
+
 	</div>
 	
 	
@@ -260,6 +277,27 @@ if (($s == "baru") or ($s == "edit")) {
 		Telp./WA : 
 		<br>
 		<input name="e_telp" type="text" value="' . $e_telp . '" size="10" class="btn-warning">
+		</p>
+	
+
+		<label for="e_jeniskelamin" class="form-label">Jenis Kelamin</label><br>
+		<select name="e_jeniskelamin" id="e_jeniskelamin" class="form-select bg-yellow" required>
+		<option value="">-- Pilih Jenis Kelamin --</option>
+		<option value="L"' . ($e_jeniskelamin == 'L' ? ' selected' : '') . '>Laki-laki</option>
+		<option value="P"' . ($e_jeniskelamin == 'P' ? ' selected' : '') . '>Perempuan</option>
+		</select>
+
+	</div>
+
+
+	
+	<div class="col-md-5">
+		
+
+		<p>
+		Alamat : 
+		<br>
+		<textarea name="e_alamat" rows="3" cols="22" class="btn-warning" required>' . $e_alamat . '</textarea>
 		</p>
 	
 		
@@ -294,6 +332,9 @@ if (($s == "baru") or ($s == "edit")) {
 			"OR nama LIKE '%$kunci%' " .
 			"OR telp LIKE '%$kunci%' " .
 			"OR jabatan LIKE '%$kunci%' " .
+			"OR alamat LIKE '%$kunci%' " .
+			"OR email LIKE '%$kunci%' " .
+			"OR jeniskelamin LIKE '%$kunci%' " .
 			"ORDER BY jabatan ASC, " .
 			"nama ASC";
 	}
@@ -341,8 +382,11 @@ if (($s == "baru") or ($s == "edit")) {
 	<td width="20">&nbsp;</td>
 	<td width="50"><strong><font color="' . $warnatext . '">KODE</font></strong></td>
 	<td><strong><font color="' . $warnatext . '">NAMA</font></strong></td>
+	<td><strong><font color="' . $warnatext . '">EMAIL</font></strong></td>
 	<td><strong><font color="' . $warnatext . '">JABATAN</font></strong></td>
 	<td><strong><font color="' . $warnatext . '">TELP.</font></strong></td>
+	<td width="50"><strong><font color="' . $warnatext . '">ALAMAT</font></strong></td>
+	<td width="50"><strong><font color="' . $warnatext . '">JENIS KELAMIN</font></strong></td>
 	</tr>
 	</thead>
 	<tbody>';
@@ -361,8 +405,11 @@ if (($s == "baru") or ($s == "edit")) {
 			$i_kd = nosql($data['kd']);
 			$i_kode = balikin($data['kode']);
 			$i_nama = balikin($data['nama']);
+			$i_email = balikin($data['email']);
 			$i_jabatan = balikin($data['jabatan']);
 			$i_telp = balikin($data['telp']);
+			$i_alamat = balikin($data['alamat']);
+			$i_jeniskelamin = balikin($data['jeniskelamin']);
 
 
 
@@ -375,8 +422,11 @@ if (($s == "baru") or ($s == "edit")) {
 			</td>
 			<td>' . $i_kode . '</td>
 			<td>' . $i_nama . '</td>
+			<td>' . $i_email . '</td>
 			<td>' . $i_jabatan . '</td>
 			<td>' . $i_telp . '</td>
+			<td>' . $i_alamat . '</td>
+			<td>' . $i_jeniskelamin . '</td>
 	        </tr>';
 		} while ($data = mysqli_fetch_assoc($result));
 	}
