@@ -83,6 +83,7 @@ if ($_POST['btnSMP']) {
 	$page = nosql($_POST['page']);
 	$e_kode = cegah($_POST['e_kode']);
 	$e_nama = cegah($_POST['e_nama']);
+	$e_tgl_lahir = cegah($_POST['e_tgl_lahir']);
 	$e_email = cegah($_POST['e_email']);
 	$e_jabatan = cegah($_POST['e_jabatan']);
 	$e_telp = cegah($_POST['e_telp']);
@@ -90,6 +91,13 @@ if ($_POST['btnSMP']) {
 	$e_jeniskelamin = cegah($_POST['e_jeniskelamin']);
 
 
+//pecah tanggal
+	$tgl2_pecah = balikin($e_tgl_lahir);
+	$tgl2_pecahku = explode("-", $tgl2_pecah);
+	$tgl2_tgl = trim($tgl2_pecahku[2]);
+	$tgl2_bln = trim($tgl2_pecahku[1]);
+	$tgl2_thn = trim($tgl2_pecahku[0]);
+	$e_tgl_lahir = "$tgl2_thn:$tgl2_bln:$tgl2_tgl";
 
 
 
@@ -111,6 +119,7 @@ if ($_POST['btnSMP']) {
 		if ($s == "edit") {
 			mysqli_query($koneksi, "UPDATE m_pelanggan SET kode = '$e_kode', " .
 				"nama = '$e_nama', " .
+				"tgl_lahir = '$e_tgl_lahir', " .
 				"email = '$e_email', " .
 				"jabatan = '$e_jabatan', " .
 				"telp = '$e_telp', " .
@@ -126,34 +135,40 @@ if ($_POST['btnSMP']) {
 
 
 
-		//jika baru
+		// jika baru
 		if ($s == "baru") {
-			//cek
-			$qcc = mysqli_query($koneksi, "SELECT * FROM m_pelanggan " .
-				"WHERE kode = '$e_kode'");
-			$rcc = mysqli_fetch_assoc($qcc);
+			// generate kode otomatis
+			$qkode = mysqli_query($koneksi, "SELECT MAX(kode) AS kode_terakhir FROM m_pelanggan");
+			$rcode = mysqli_fetch_assoc($qkode);
+			$kode_terakhir = $rcode['kode_terakhir'];
+
+			$angka = intval($kode_terakhir);
+			$angka_baru = $angka + 1;
+			$e_kode = str_pad($angka_baru, 3, '0', STR_PAD_LEFT);
+
+			// cek apakah kode sudah ada (jika perlu validasi tambahan)
+			$qcc = mysqli_query($koneksi, "SELECT * FROM m_pelanggan WHERE kode = '$e_kode'");
 			$tcc = mysqli_num_rows($qcc);
 
-			//nek ada
 			if ($tcc != 0) {
-				//re-direct
-				$pesan = "Sudah Ada. Silahkan Ganti Yang Lain...!!";
+				// re-direct jika duplikat
+				$pesan = "Kode sudah digunakan. Silakan coba lagi.";
 				$ke = "$filenya?s=baru&kd=$kd";
 				pekem($pesan, $ke);
 				exit();
 			} else {
-				mysqli_query($koneksi, "INSERT INTO m_pelanggan(kd, kode, nama, email, " .
-					"jabatan, telp, alamat, jeniskelamin, postdate) VALUES " .
-					"('$kd', '$e_kode', '$e_nama', '$e_email', " .
-					"'$e_jabatan', '$e_telp', '$e_alamat', '$e_jeniskelamin', '$today')");
+				// simpan data
+				mysqli_query($koneksi, "INSERT INTO m_pelanggan(kd, kode, nama, tgl_lahir, email, 
+					jabatan, telp, alamat, jeniskelamin, postdate) VALUES 
+					('$kd', '$e_kode', '$e_nama', '$e_tgl_lahir', '$e_email', 
+					'$e_jabatan', '$e_telp', '$e_alamat', '$e_jeniskelamin', '$today')");
 
-
-
-				//re-direct
+				// re-direct
 				xloc($filenya);
 				exit();
 			}
 		}
+
 	}
 }
 
@@ -216,13 +231,30 @@ if (($s == "baru") or ($s == "edit")) {
 	$qx = mysqli_query($koneksi, "SELECT * FROM m_pelanggan " .
 		"WHERE kd = '$kdx'");
 	$rowx = mysqli_fetch_assoc($qx);
-	$e_kode = balikin($rowx['kode']);
+
+	//kode otomatis
+	if ($s == "baru") {
+    // generate kode otomatis
+    $qkode = mysqli_query($koneksi, "SELECT MAX(kode) AS kode_terakhir FROM m_pelanggan");
+    $rcode = mysqli_fetch_assoc($qkode);
+    $kode_terakhir = $rcode['kode_terakhir'];
+
+    $angka = intval($kode_terakhir);
+    $angka_baru = $angka + 1;
+    $e_kode = str_pad($angka_baru, 3, '0', STR_PAD_LEFT); // hasil: '005'
+	} else {
+		$e_kode = balikin($rowx['kode']);
+	}
+	
+
 	$e_nama = balikin($rowx['nama']);
+	$e_tgl_lahir = balikin($rowx['tgl_lahir']);
 	$e_email = balikin($rowx['email']);
 	$e_jabatan = balikin($rowx['jabatan']);
 	$e_telp = balikin($rowx['telp']);
 	$e_alamat = balikin($rowx['alamat']);
 	$e_jeniskelamin = balikin($rowx['jeniskelamin']);
+
 
 
 	echo '<a href="' . $filenya . '" class="btn btn-danger"> KEMBALI</a>
@@ -252,6 +284,14 @@ if (($s == "baru") or ($s == "edit")) {
 		<br>
 		<input name="e_nama" type="text" value="' . $e_nama . '" size="30" class="btn-warning" required>
 		</p>
+
+
+		<p>
+		Tanggal Lahir : 
+		<br>
+		<input name="e_tgl_lahir" type="date" value="' . $e_tgl_lahir . '" size="10" class="btn-warning" required>
+		</p>
+
 
 	
 		<p>
@@ -330,6 +370,7 @@ if (($s == "baru") or ($s == "edit")) {
 		$sqlcount = "SELECT * FROM m_pelanggan " .
 			"WHERE kode LIKE '%$kunci%' " .
 			"OR nama LIKE '%$kunci%' " .
+			"OR tgl_lahir LIKE '%$kunci%' " .
 			"OR telp LIKE '%$kunci%' " .
 			"OR jabatan LIKE '%$kunci%' " .
 			"OR alamat LIKE '%$kunci%' " .
@@ -382,6 +423,7 @@ if (($s == "baru") or ($s == "edit")) {
 	<td width="20">&nbsp;</td>
 	<td width="50"><strong><font color="' . $warnatext . '">KODE</font></strong></td>
 	<td><strong><font color="' . $warnatext . '">NAMA</font></strong></td>
+	<td><strong><font color="' . $warnatext . '">TANGGAL LAHIR</font></strong></td>
 	<td><strong><font color="' . $warnatext . '">EMAIL</font></strong></td>
 	<td><strong><font color="' . $warnatext . '">JABATAN</font></strong></td>
 	<td><strong><font color="' . $warnatext . '">TELP.</font></strong></td>
@@ -405,6 +447,7 @@ if (($s == "baru") or ($s == "edit")) {
 			$i_kd = nosql($data['kd']);
 			$i_kode = balikin($data['kode']);
 			$i_nama = balikin($data['nama']);
+			$i_tgl_lahir = balikin($data['tgl_lahir']);
 			$i_email = balikin($data['email']);
 			$i_jabatan = balikin($data['jabatan']);
 			$i_telp = balikin($data['telp']);
@@ -422,6 +465,7 @@ if (($s == "baru") or ($s == "edit")) {
 			</td>
 			<td>' . $i_kode . '</td>
 			<td>' . $i_nama . '</td>
+			<td>' . $i_tgl_lahir . '</td>
 			<td>' . $i_email . '</td>
 			<td>' . $i_jabatan . '</td>
 			<td>' . $i_telp . '</td>
